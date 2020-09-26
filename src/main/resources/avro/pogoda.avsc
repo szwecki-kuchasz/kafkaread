@@ -1,0 +1,29 @@
+{
+  "namespace": "pl.w93c.kafkaread.data",
+  "type": "record",
+  "name": "Pogoda",
+  "doc": "Dane pogody",
+  "fields": [
+    {
+      "name": "miejsce",
+      "doc": "Miejsce pomiaru",
+      "type": "string",
+      "order": "ignore"
+    },
+    {
+      "name": "time",
+      "doc": "Czas - milisekundy od 1.1.1970",
+      "type": "long"
+    },
+    {
+      "name": "temperatura",
+      "doc": "Temperatura w stopniach Celsjusza",
+      "type": "int"
+    },
+    {
+      "name": "cisnienie",
+      "doc": "Ciśnienie w hPa",
+      "type": "int"
+    }
+  ]
+}

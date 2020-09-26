@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>pl.w93c</groupId>
+	<artifactId>kafka-read</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>kafka-read</name>
+	<description>Przypomocnik Kafki</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<avro.version>1.8.2</avro.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.3</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>${avro.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<version>${avro.version}</version>
+				<!--global plugin configuration which used for run goal separately-->
+				<configuration>
+					<!--The Avro source directory for schema, protocol and IDL files.-->
+					<sourceDirectory>src/main/resources/avro/</sourceDirectory>
+					<!--The directory where Avro writes code-generated sources. IMPORTANT!! -->
+					<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+					<!--The input directory containing any Avro files used in testing.-->
+					<testSourceDirectory>${project.basedir}/src/test/avro/</testSourceDirectory>
+					<!--The output directory where Avro writes code-generated files for your testing purposes.-->
+					<testOutputDirectory>${project.basedir}/src/test/java/</testOutputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<!--
+                        IMPORTANT: Because this configuration is set in the execution with phase `generate-sources`.
+                        So only run compile or package which include this phase will apply this configuration.
+                        So if only make this configuration, run `mvn avro:schema` will only generate to the target
+                        folder with default configuration.
+                        -->
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>schema</goal>
+							<!--If you want to generate other code, need add more goals-->
+							<goal>protocol</goal>
+							<goal>idl-protocol</goal>
+						</goals>
+						<!---->
+						<configuration>
+							<!--default is ${basedir}/src/main/avro
+                            The Avro source directory for schema, protocol and IDL files.-->
+							<sourceDirectory>src/main/resources/avro/</sourceDirectory>
+
+							<!--default is ${project.build.directory}/generated-sources/avro
+                             The directory where Avro writes code-generated sources. IMPORTANT!! -->
+							<outputDirectory>${project.basedir}/target/generated-sources/</outputDirectory>
+
+							<!--default is ${basedir}/src/test/avro
+                            The input directory containing any Avro files used in testing.-->
+							<testSourceDirectory>src/test/resources/avro/</testSourceDirectory>
+
+							<!--default is ${project.build.directory}/generated-test-sources/avro
+                            The output directory where Avro writes code-generated files for your testing purposes.-->
+							<testOutputDirectory>${project.basedir}/target/generated-test-sources/</testOutputDirectory>
+
+							<!--fieldVisibility PUBLIC_DEPRECATED
+                            Determines the accessibility of fields (e.g. whether they are public or private).
+                            Must be one of PUBLIC, PUBLIC_DEPRECATED or PRIVATE. PUBLIC_DEPRECATED merely
+                            adds a deprecated annotation to each field, e.g. "@Deprecated public long time".-->
+
+
+							<!--In addition, the includes and testIncludes configurables can also be used to
+                            specify alternative file extensions to the defaults, which are **/*.avsc, **/*.avpr
+                            and **/*.avdl for schema, protocol and IDL files respectively.-->
+							<!--<includes>-->
+							<!--<include>**/*.av*</include>-->
+							<!--</includes>-->
+							<!--<testIncludes>-->
+							<!--<testInclude>**/*.test</testInclude>-->
+							<!--</testIncludes>>-->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
