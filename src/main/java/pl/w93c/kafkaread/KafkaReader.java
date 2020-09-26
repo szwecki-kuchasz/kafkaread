@@ -1,10 +1,12 @@
 package pl.w93c.kafkaread;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,14 +16,14 @@ public abstract class KafkaReader {
 
     public void runSingleWorker(String topicName, Properties consumerProperties) {
 
-        org.apache.kafka.clients.consumer.KafkaConsumer kafkaConsumer;
+        KafkaConsumer kafkaConsumer;
 
         kafkaConsumer = new org.apache.kafka.clients.consumer.KafkaConsumer<String, byte[]>(consumerProperties);
         kafkaConsumer.subscribe(Arrays.asList(topicName));
 
         while (true) {
 
-            ConsumerRecords<byte[], byte[]> records = kafkaConsumer.poll(100);
+            ConsumerRecords<byte[], byte[]> records = kafkaConsumer.poll(Duration.ofMillis(100));
 
             for (ConsumerRecord<byte[], byte[]> record : records) {
 
